@@ -23,4 +23,6 @@ const userSchema = Schema({
   },
 });
 
+userSchema.methods.addItemToCart = function (productId) {};
+
 module.exports = mongoose.model("User", userSchema);
