@@ -4,7 +4,13 @@ const restaurantController = require("../controllers/restaurant");
 
 const router = express.Router();
 
-//method:GET, path:"/"
+// method:GET
+// path:"/"
 router.get("/", restaurantController.getHome);
+
+//path:"/products"
+router.get("/products", restaurantController.getProducts);
+
+// method:POST
 
 module.exports = router;

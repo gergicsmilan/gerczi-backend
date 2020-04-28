@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const restaurantRoutes = require("./routes/restaurant");
+const adminRoutes = require("./routes/admin");
 const User = require("./models/user");
 
 const app = express();
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 });
 
 app.use(restaurantRoutes);
+app.use("/admin", adminRoutes);
 
 mongoose
   .connect(
