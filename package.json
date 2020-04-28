@@ -1,0 +1,22 @@
+{
+  "name": "gerczi-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gergicsmilan/gerczi-backend.git"
+  },
+  "author": "Akos&Milan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gergicsmilan/gerczi-backend/issues"
+  },
+  "homepage": "https://github.com/gergicsmilan/gerczi-backend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
