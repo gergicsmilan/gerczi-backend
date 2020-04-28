@@ -19,19 +19,3 @@ app.use((req, res, next) => {
 app.use(restaurantRoutes);
 
 app.listen(6969);
-
-class User {
-  constructor() {
-    cart: {
-      items: [
-        { itemId: 1, quantity: 2 },
-        { itemId: 2, quantity: 1 },
-      ];
-    }
-    address: {
-      zip: 123;
-      city: "Bp";
-      street: "?";
-    }
-  }
-}
