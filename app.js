@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const restaurantRoutes = require("./routes/restaurant");
 const adminRoutes = require("./routes/admin");
+const authRoutes = require("./routes/auth");
 const User = require("./models/user");
 
 const app = express();
@@ -13,9 +14,9 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // allows access to any domain (frontend: localhost:3000)
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE"
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   ); //allows these methods
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type"); //headers can be set by the client
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); //headers can be set by the client
   next();
 });
 
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 app.use(restaurantRoutes);
 app.use("/admin", adminRoutes);
+app.use("/auth", authRoutes);
 
 mongoose
   .connect(
@@ -45,7 +47,6 @@ mongoose
           firstName: "Milák",
           lastName: "Gerczi",
           phoneNumber: "30/6969699",
-          role: "user",
           address: { zip: 6969, city: "Budapest", street: "Big street 69." },
         });
         user.save();
