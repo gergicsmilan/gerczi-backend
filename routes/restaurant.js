@@ -16,6 +16,6 @@ router.get("/products", restaurantController.getProducts);
 router.post("/cart/add-product", restaurantController.postAddCartProduct);
 
 // path:"/cart/remove-product"
-router.post("/cart/remove-product", restaurantController.postDeleteCartProduct)
+router.post("/cart/remove-product", restaurantController.postDeleteCartProduct);
 
 module.exports = router;
