@@ -12,5 +12,6 @@ router.get("/", restaurantController.getHome);
 router.get("/products", restaurantController.getProducts);
 
 // method:POST
+router.post("/cart/add-product", restaurantController.addToCart);
 
 module.exports = router;

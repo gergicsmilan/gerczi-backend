@@ -14,15 +14,24 @@ const userSchema = Schema({
     street: { type: String },
   },
   cart: {
-    items: [
+    products: [
       {
-        itemId: { type: Schema.Types.ObjectId, required: true },
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
         quantity: { type: Number, required: true },
       },
     ],
   },
 });
 
-userSchema.methods.addItemToCart = function (productId) {};
+userSchema.methods.addProductToCart = function (productId) {
+  const newCartProduct = { productId: productId, quantity: 1 };
+  const cartProducts = [...this.cart.products, newCartProduct];
+  this.cart.products = cartProducts;
+  return this.save();
+};
 
 module.exports = mongoose.model("User", userSchema);
