@@ -4,14 +4,15 @@ const Schema = mongoose.Schema;
 
 const userSchema = Schema({
   email: { type: String, required: true },
+  password: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
-  role: { type: String, required: true },
+  phoneNumber: { type: String, default: null },
+  role: { type: String, default: "user" },
   address: {
-    zip: { type: Number },
-    city: { type: String },
-    street: { type: String },
+    zip: { type: Number, default: null },
+    city: { type: String, default: null },
+    street: { type: String, default: null },
   },
   cart: {
     products: [
@@ -28,9 +29,9 @@ const userSchema = Schema({
 });
 
 userSchema.methods.addProductToCart = function (productId) {
-  const cartProductIndex = this.cart.products.findIndex(cartProduct => {
+  const cartProductIndex = this.cart.products.findIndex((cartProduct) => {
     return cartProduct.productId.toString() === productId.toString();
-  })
+  });
   console.log(cartProductIndex);
   let productQuantity = 1;
   const updatedCartProducts = [...this.cart.products];
@@ -41,8 +42,8 @@ userSchema.methods.addProductToCart = function (productId) {
   } else {
     updatedCartProducts.push({
       productId: productId,
-      quantity: productQuantity
-    })
+      quantity: productQuantity,
+    });
   }
 
   this.cart.products = updatedCartProducts;
@@ -50,12 +51,12 @@ userSchema.methods.addProductToCart = function (productId) {
   return this.save();
 };
 
-userSchema.methods.removeProductFromCart = function(productId) {
-  const updatedCartProducts = this.cart.products.filter(item => {
+userSchema.methods.removeProductFromCart = function (productId) {
+  const updatedCartProducts = this.cart.products.filter((item) => {
     return item.productId.toString() !== productId.toString();
   });
   this.cart.products = updatedCartProducts;
   return this.save();
-}
+};
 
 module.exports = mongoose.model("User", userSchema);
