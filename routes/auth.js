@@ -11,4 +11,8 @@ const router = express.Router();
 // path: "/auth/sign-up"
 router.post("/sign-up", authController.signUp);
 
+// path: "/auth/sign-in"
+router.post("/sign-in", authController.signIn);
+
+
 module.exports = router;
