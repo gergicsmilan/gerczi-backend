@@ -16,14 +16,21 @@ exports.postAddCartProduct = (req, res, next) => {
   req.user
     .addProductToCart(productId)
     .then((result) => {
-      res.status(200).json({ message: `Product: ${productId} is added to cart!` });
+      res
+        .status(200)
+        .json({ message: `Product: ${productId} is added to cart!` });
     })
     .catch((err) => console.log(err));
 };
 
 exports.postDeleteCartProduct = (req, res, next) => {
   const productId = req.body.productId;
-  req.user.removeProductFromCart(productId)
-  .then(result => res.status(200).json({ message: `Product: ${productId} is removed from cart!`}))
-  .catch(err => console.log(err));
-}
+  req.user
+    .removeProductFromCart(productId)
+    .then((result) =>
+      res
+        .status(200)
+        .json({ message: `Product: ${productId} is removed from cart!` })
+    )
+    .catch((err) => console.log(err));
+};
