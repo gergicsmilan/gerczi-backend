@@ -33,6 +33,14 @@ app.use(restaurantRoutes);
 app.use("/admin", adminRoutes);
 app.use("/auth", authRoutes);
 
+app.use((error, req, res, next) => {
+  console.log(error);
+
+  const status = error.statusCode;
+  const message = error.message;
+  res.status(status).json({ errorMessage: message });
+});
+
 mongoose
   .connect(
     "mongodb+srv://gerczi:gerczi69@restaurantdb-iax4d.mongodb.net/restaurant?retryWrites=true&w=majority",
