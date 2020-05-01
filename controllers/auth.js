@@ -43,7 +43,7 @@ exports.signIn = (req, res, next) => {
   const password = req.body.password;
   const errors = validationResult(req);
   const authError = new Error("Invalid email or password!");
-  authError.statusCode = 401;
+  authError.statusCode = 422;
 
   if (!errors.isEmpty()) {
     return res.status(422).json({ errorMessage: errors.array()[0].msg });
@@ -73,7 +73,7 @@ exports.signIn = (req, res, next) => {
       res.status(200).json({ jwt: token });
     })
     .catch((err) => {
-      if (err.statusCode === 401) {
+      if (err.statusCode === 422) {
         console.log(err.message);
         res.status(err.statusCode).json({ error: err.message });
       } else {
