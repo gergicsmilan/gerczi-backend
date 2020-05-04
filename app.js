@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -10,6 +12,8 @@ const User = require("./models/user");
 const app = express();
 
 app.use(bodyParser.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // allows access to any domain (frontend: localhost:3000)
   res.setHeader(
