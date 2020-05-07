@@ -19,7 +19,7 @@ const fileStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, uuidv4());
-  }
+  },
 });
 
 const fileFilter = (req, file, cb) => {
@@ -35,7 +35,9 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(bodyParser.json());
-app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
@@ -62,7 +64,7 @@ app.use('/admin', adminRoutes);
 app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
-  console.log(error);
+  console.error(error);
   const status = error.statusCode || 500;
   const message = error.message;
   res.status(status).json({ errorMessage: message });
