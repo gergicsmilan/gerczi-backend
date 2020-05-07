@@ -1,12 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
 const productSchema = Schema({
+  categoryIds: [
+    { type: Schema.Types.ObjectId, ref: 'Category', default: null },
+  ],
   name: { type: String, required: true },
   price: { type: Number, required: true },
-  imageUrl: { type: String, required: true },
-  ingredients: [{ type: String, required: true }], // for filtering the product should implement Category, Ingredient modell
+  imageUrl: { type: String, default: null },
+  ingredients: [{ type: String, required: true }],
 });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);
