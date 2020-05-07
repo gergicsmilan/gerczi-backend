@@ -27,61 +27,43 @@ exports.addProduct = async (req, res, next) => {
       if (updateQueries.length > 0) await Category.bulkWrite(updateQueries);
     }
   } catch (err) {
-    next(err);
+    return next(err);
   }
   console.log('Product successfully created!');
   return res.status(200).json({ success: true });
 };
 
-exports.addCategory = (req, res, next) => {
-  const categoryName = req.body.categoryName;
-  const categoryPrice = req.body.categoryPrice;
-  let imageUrl;
-  if (req.file) {
-    imageUrl = req.file.path.replace('\\', '/');
-  }
-
-  const newCategory = new Category({
-    name: categoryName,
-    price: categoryPrice,
-  });
-
-  if (imageUrl) {
-    newCategory.imageUrl = imageUrl;
-  }
-
-  newCategory
-    .save()
-    .then((result) => {
-      console.log('Category successfully created!');
-      res
-        .status(201)
-        .json({ message: 'Category successfully created!', category: result });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+exports.addCategory = async (req, res, next) => {
+  try {
+    const addCategoryResult = await Category.create({
+      name: req.body.categoryName,
+      price: req.body.categoryPrice,
+      imageUrl: req.file ? req.file.path.replace('\\', '/') : null,
     });
+  } catch (err) {
+    return next(err);
+  }
+  console.log('Category successfully created!');
+  res.status(201).json({ success: true })
 };
 
 exports.addProductToCategory = async (req, res, next) => {
-  const productId = req.body.productId;
-  const categoryId = req.body.categoryId;
   let result;
   try {
     result = await Category.updateOne(
-      { _id: mongoose.Types.ObjectId(categoryId) },
+      { _id: req.body.categoryId },
       {
-        $addToSet: { products: mongoose.Types.ObjectId(productId) },
+        $addToSet: { products: req.body.productId },
       }
     );
     if (result.nModified === 0) {
-      throw new Error('Update failed!');
+      const error = new Error('Adding product to category failed! Category might not exist or product is already added to this category!');
+      error.statusCode = 422;
+      throw error;
     }
   } catch (err) {
     return next(err);
   }
+  console.log('Product successfully added to category!');
   return res.status(202).json({ success: true });
 };
