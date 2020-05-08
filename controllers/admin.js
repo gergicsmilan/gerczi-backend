@@ -37,7 +37,6 @@ exports.addCategory = async (req, res, next) => {
   try {
     const addCategoryResult = await Category.create({
       name: req.body.categoryName,
-      price: req.body.categoryPrice,
       imageUrl: req.file ? req.file.path.replace('\\', '/') : null,
     });
   } catch (err) {
