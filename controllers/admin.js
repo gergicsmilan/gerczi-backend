@@ -43,19 +43,26 @@ exports.addCategory = async (req, res, next) => {
     return next(err);
   }
   console.log('Category successfully created!');
-  res.status(201).json({ success: true });
+  return res.status(201).json({ success: true });
 };
 
 exports.addProductToCategory = async (req, res, next) => {
-  let result;
+  let categoryUpdate;
+  let productUpdate;
   try {
-    result = await Category.updateOne(
+    categoryUpdate = await Category.updateOne(
       { _id: req.body.categoryId },
       {
         $addToSet: { products: req.body.productId },
       }
     );
-    if (result.nModified === 0) {
+    productUpdate = await Product.updateOne(
+      { _id: req.body.productId },
+      {
+        $addToSet: { categoryIds: req.body.categoryId },
+      }
+    );
+    if (categoryUpdate.nModified === 0) {
       const error = new Error(
         'Adding product to category failed! Category might not exist or product is already added to this category!'
       );
