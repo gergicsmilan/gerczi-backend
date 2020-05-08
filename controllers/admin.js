@@ -5,7 +5,7 @@ const Product = require('../models/product');
 const Category = require('../models/category');
 
 exports.addProduct = async (req, res, next) => {
-  const categoryIds = req.body.categoryIds ? [...req.body.categoryIds] : null;
+  const categoryIds = req.body.categoryIds ? [...req.body.categoryIds] : [];
 
   try {
     const addProductResult = await Product.create({
@@ -15,7 +15,7 @@ exports.addProduct = async (req, res, next) => {
       imageUrl: req.file ? req.file.path.replace('\\', '/') : null,
       categoryIds: categoryIds,
     });
-    if (categoryIds) {
+    if (categoryIds.length > 0) {
       const updateQueries = categoryIds.map((categoryId) => ({
         updateOne: {
           filter: { _id: categoryId },
