@@ -1,13 +1,17 @@
 const { validationResult } = require('express-validator');
-const mongoose = require('mongoose');
 
 const Product = require('../models/product');
 const Category = require('../models/category');
 
 exports.addProduct = async (req, res, next) => {
   const categoryIds = req.body.categoryIds ? [...req.body.categoryIds] : [];
-
+  const errors = validationResult(req);
   try {
+    if (!errors.isEmpty()) {
+      const error = new Error(`addProduct failed!\n${errors.array()[0].msg}`);
+      error.statusCode = 422;
+      throw error;
+    }
     const addProductResult = await Product.create({
       name: req.body.productName,
       price: req.body.productPrice,
@@ -29,12 +33,17 @@ exports.addProduct = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-  console.log('Product successfully created!');
   return res.status(200).json({ success: true });
 };
 
 exports.addCategory = async (req, res, next) => {
+  const errors = validationResult(req);
   try {
+    if (!errors.isEmpty()) {
+      const error = new Error(`addCategory failed!\n${errors.array()[0].msg}`);
+      error.statusCode = 422;
+      throw error;
+    }
     const addCategoryResult = await Category.create({
       name: req.body.categoryName,
       imageUrl: req.file ? req.file.path.replace('\\', '/') : null,
@@ -42,14 +51,19 @@ exports.addCategory = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-  console.log('Category successfully created!');
   return res.status(201).json({ success: true });
 };
 
 exports.addProductToCategory = async (req, res, next) => {
+  const errors = validationResult(req);
   let categoryUpdate;
   let productUpdate;
   try {
+    if (!errors.isEmpty()) {
+      const error = new Error(`addProductToCategory failed!\n${errors.array()[0].msg}`);
+      error.statusCode = 422;
+      throw error;
+    }
     categoryUpdate = await Category.updateOne(
       { _id: req.body.categoryId },
       {
@@ -64,7 +78,7 @@ exports.addProductToCategory = async (req, res, next) => {
     );
     if (categoryUpdate.nModified === 0) {
       const error = new Error(
-        'Adding product to category failed! Category might not exist or product is already added to this category!'
+        'Adding product to category failed!\nInvalid category or product is already added!'
       );
       error.statusCode = 422;
       throw error;
@@ -72,6 +86,5 @@ exports.addProductToCategory = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-  console.log('Product successfully added to category!');
   return res.status(202).json({ success: true });
 };
