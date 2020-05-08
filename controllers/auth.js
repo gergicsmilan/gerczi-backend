@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-const { validationResult } = require("express-validator");
+const { validationResult } = require('express-validator');
 
-const User = require("../models/user");
+const User = require('../models/user');
 
 exports.signUp = (req, res, next) => {
   const email = req.body.email;
@@ -31,7 +31,7 @@ exports.signUp = (req, res, next) => {
     })
     .then((result) => {
       console.log(`${email} user has been created!`);
-      res.status(201).json({ message: "User successfully created!" });
+      res.status(201).json({ message: 'User successfully created!' });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -46,7 +46,7 @@ exports.signIn = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const errors = validationResult(req);
-  const authError = new Error("Invalid email or password!");
+  const authError = new Error('Invalid email or password!');
   authError.statusCode = 422;
 
   if (!errors.isEmpty()) {
@@ -67,14 +67,16 @@ exports.signIn = (req, res, next) => {
       }
       const token = jwt.sign(
         {
+          userId: loadedUser._id.toString(),
           email: loadedUser.email,
           lastName: loadedUser.lastName,
           firstName: loadedUser.firstName,
         },
-        "mysecretkey"
+        'mysecretkey',
+        { expiresIn: '2h' }
       );
-      console.log("JWT succesfully created!");
-      res.status(200).json({ jwt: token });
+      console.log('JWT succesfully created!');
+      res.status(200).json({ success: true, jwt: token });
     })
     .catch((err) => {
       if (!err.statusCode) {

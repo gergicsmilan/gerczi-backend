@@ -44,7 +44,7 @@ exports.addCategory = async (req, res, next) => {
     return next(err);
   }
   console.log('Category successfully created!');
-  res.status(201).json({ success: true })
+  res.status(201).json({ success: true });
 };
 
 exports.addProductToCategory = async (req, res, next) => {
@@ -57,7 +57,9 @@ exports.addProductToCategory = async (req, res, next) => {
       }
     );
     if (result.nModified === 0) {
-      const error = new Error('Adding product to category failed! Category might not exist or product is already added to this category!');
+      const error = new Error(
+        'Adding product to category failed! Category might not exist or product is already added to this category!'
+      );
       error.statusCode = 422;
       throw error;
     }
