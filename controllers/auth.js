@@ -1,9 +1,32 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: { api_key: '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' },
+  })
+);
+
+exports.IsEmailExists = async (req, res, next) => {
+  const inputEmail = req.params.email;
+  let user;
+
+  try {
+    user = await User.findOne({ email: inputEmail });
+  } catch (err) {
+    return next(err);
+  }
+
+  if (user) return res.status(200).json({ succes: true, data: true });
+
+  return res.status(200).json({ succes: true, data: false });
+};
 
 exports.signUp = async (req, res, next) => {
   const errors = validationResult(req);
@@ -21,6 +44,13 @@ exports.signUp = async (req, res, next) => {
       password: hashedPassword,
       lastName: req.body.lastName,
       firstName: req.body.firstName,
+    });
+
+    await transporter.sendMail({
+      to: req.body.email,
+      from: 'gergics.milan@hotmail.com',
+      subject: 'Signup succeeded!',
+      html: '<h1>You successfully signed up!</h1>',
     });
   } catch (err) {
     return next(err);
@@ -46,10 +76,7 @@ exports.signIn = async (req, res, next) => {
     }
 
     loadedUser = user;
-    const isEqualPassword = await bcrypt.compare(
-      req.body.password,
-      loadedUser.password
-    );
+    const isEqualPassword = await bcrypt.compare(req.body.password, loadedUser.password);
     if (!isEqualPassword) {
       throw authError;
     }
@@ -64,7 +91,7 @@ exports.signIn = async (req, res, next) => {
     firstName: loadedUser.firstName,
   };
 
-  const token = jwt.sign(payload, 'mysecretkey', { expiresIn: '2h' });
+  const token = jwt.sign(payload, 'mysecretkey', { expiresIn: '1d' });
 
   return res.status(200).json({ success: true, jwt: token });
 };
