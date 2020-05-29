@@ -40,12 +40,13 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 );
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use(lusca({
-  xframe: 'SAMEORIGIN',
-  xssProtection: true,
-}));
+app.use(
+  lusca({
+    xframe: 'SAMEORIGIN',
+    xssProtection: true,
+  })
+);
 app.disable('x-powered-by');
-
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); // allows access to any domain (frontend: localhost:3000)
