@@ -4,7 +4,7 @@ const { Date } = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderSchema = (Schema = {
-  user: { userId: { type: Schema.Types.ObjectId, ref: 'User', required: true } },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   contactInfo: {
     email: { type: String, required: true },
     firstName: { type: String, required: true },
