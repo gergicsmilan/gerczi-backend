@@ -10,6 +10,7 @@ const lusca = require('lusca');
 const restaurantRoutes = require('./routes/restaurant');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
+const orderRoutes = require('./routes/order');
 const User = require('./models/user');
 
 const app = express();
@@ -36,9 +37,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(bodyParser.json());
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
-);
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(
   lusca({
@@ -50,10 +49,7 @@ app.disable('x-powered-by');
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); // allows access to any domain (frontend: localhost:3000)
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, PATCH, DELETE, OPTIONS'
-  ); //allows these methods
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); //allows these methods
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); //headers can be set by the client
   next();
 });
@@ -70,6 +66,7 @@ app.use((req, res, next) => {
 app.use(restaurantRoutes);
 app.use('/admin', adminRoutes);
 app.use('/auth', authRoutes);
+app.use('/order', orderRoutes);
 
 app.use((error, req, res, next) => {
   console.error(error);
