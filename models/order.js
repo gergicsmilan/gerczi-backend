@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-
-const Products = require('./product');
+const { Date } = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -10,7 +9,7 @@ const orderSchema = (Schema = {
     email: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    phoneNumber: { type: String, default: null },
+    phoneNumber: { type: String, required: true },
   },
   shippinginfo: {
     zip: { type: Number, required: true },
@@ -29,6 +28,7 @@ const orderSchema = (Schema = {
       },
     ],
   },
+  date: { type: Date, required: true },
 });
 
 module.exports = mogoose.model('Order', orderSchema);
