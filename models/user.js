@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Product = require('./product')
+const Product = require('./product');
 
 const Schema = mongoose.Schema;
 
@@ -16,7 +16,8 @@ const userSchema = Schema({
     city: { type: String, default: null },
     street: { type: String, default: null },
   },
-  cart: {
+  orderedItems: { order: [{ orderId: { type: Schema.Types.ObjectId, ref: 'Order' } }] },
+  /* cart: {
     products: [
       {
         productId: {
@@ -27,10 +28,10 @@ const userSchema = Schema({
         quantity: { type: Number, required: true },
       },
     ],
-  },
+  }, */
 });
 
-userSchema.methods.addProductToCart = async function (productId) {
+/* userSchema.methods.addProductToCart = async function (productId) {
   try {
     const product = await Product.findById(productId);
     if (!product) {
@@ -72,6 +73,6 @@ userSchema.methods.removeProductFromCart = function (productId) {
   });
   this.cart.products = updatedCartProducts;
   return this.save();
-};
+}; */
 
 module.exports = mongoose.model('User', userSchema);
