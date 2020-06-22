@@ -13,6 +13,32 @@ const transporter = nodemailer.createTransport(
   })
 );
 
+exports.getUser = async (req, res, next) => {
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ success: false });
+
+  let user;
+  try {
+    user = await User.findOne({ _id: userId });
+  } catch (err) {
+    next(err);
+  }
+
+  if (!user) return res.status(401).json({ success: false });
+
+  const userData = {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    role: user.role,
+    address: user.address,
+    orderedItems: user.orderedItems,
+  };
+
+  return res.status(200).json({ success: true, userData: userData });
+};
+
 exports.IsEmailExists = async (req, res, next) => {
   const inputEmail = req.params.email;
   let user;
