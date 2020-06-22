@@ -4,6 +4,7 @@ module.exports = (req, res, next) => {
   let decodedToken;
   try {
     decodedToken = jwt.verify(req.get('Authorization'), 'mysecretkey');
+    console.log(decodedToken);
   } catch (err) {
     throw err;
   }
@@ -12,7 +13,8 @@ module.exports = (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
-  // user roles needed (admin, user)..
+  // user roles needed (admin, user) etc..
   req.userId = decodedToken.userId;
+
   next();
 };
