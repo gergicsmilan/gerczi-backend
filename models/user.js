@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 /* const Product = require('./product'); */
+const Order = require('./order');
 
 const Schema = mongoose.Schema;
 
@@ -31,7 +32,26 @@ const userSchema = Schema({
   }, */
 });
 
-/* userSchema.methods.addProductToCart = async function (productId) {
+userSchema.methods.addOrderToUser = async function (orderId) {
+  let order;
+  try {
+    order = await Order.findById(orderId);
+    if (!order) {
+      const error = new Error('Invalid order id!');
+      error.statusCode = 422;
+      throw error;
+    }
+  } catch (err) {
+    throw err;
+  }
+
+  const updatedOrders = [...this.orderedItems.order];
+  updatedOrders.push(order);
+  this.orderedItems.order = updatedOrders;
+  return this.save();
+};
+
+userSchema.methods.addProductToCart = async function (productId) {
   try {
     const product = await Product.findById(productId);
     if (!product) {
@@ -73,6 +93,6 @@ userSchema.methods.removeProductFromCart = function (productId) {
   });
   this.cart.products = updatedCartProducts;
   return this.save();
-}; */
+};
 
 module.exports = mongoose.model('User', userSchema);
