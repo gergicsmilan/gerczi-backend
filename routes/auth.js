@@ -3,12 +3,16 @@ const { body } = require('express-validator');
 
 const authController = require('../controllers/auth');
 const User = require('../models/user');
+const isAuth = require('../authentication/is-auth');
 
 const router = express.Router();
 
 // Method: GET
 // path: "/auth/exists/:email"
 router.get('/exists/:email', authController.IsEmailExists);
+
+// path: "/auth/get-user"
+router.get('/get-user', isAuth, authController.getUser);
 
 // Method: POST
 // path: "/auth/sign-up"
@@ -43,5 +47,8 @@ router.post(
   [body('email').isEmail().withMessage('Invalid email or password!')],
   authController.signIn
 );
+
+//path: "/auth/change-personal-data"
+router.post('/change-personal-data', isAuth, authController.postChangePersonalData);
 
 module.exports = router;

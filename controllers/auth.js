@@ -54,6 +54,24 @@ exports.IsEmailExists = async (req, res, next) => {
   return res.status(200).json({ succes: true, data: false });
 };
 
+exports.postChangePersonalData = async (req, res, next) => {
+  const userId = req.userId;
+  const address = { zip: req.body.zip, city: req.body.city, street: req.body.street };
+
+  try {
+    const user = await User.findById(userId);
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
+    user.email = req.body.email;
+    user.phoneNumber = req.body.phoneNumber;
+    user.address = address;
+    await user.save();
+  } catch (err) {
+    next(err);
+  }
+  res.status(200).json({ success: true });
+};
+
 exports.signUp = async (req, res, next) => {
   const errors = validationResult(req);
 
