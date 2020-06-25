@@ -10,8 +10,6 @@ const lusca = require('lusca');
 const restaurantRoutes = require('./routes/restaurant');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
-const orderRoutes = require('./routes/order');
-const User = require('./models/user');
 
 const app = express();
 
@@ -54,19 +52,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  User.findById('5ea813dd40cca22b446fc17b')
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
-
 app.use(restaurantRoutes);
 app.use('/admin', adminRoutes);
 app.use('/auth', authRoutes);
-app.use('/order', orderRoutes);
 
 app.use((error, req, res, next) => {
   console.error(error);
@@ -79,22 +67,8 @@ mongoose
     'mongodb+srv://gerczi:gerczi69@restaurantdb-iax4d.mongodb.net/restaurant?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
-  .then((result) => {
-    // allows to have only one user for testing, and also creates one...
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          email: 'test@gmail.com',
-          firstName: 'Milák',
-          lastName: 'Gerczi',
-          phoneNumber: '30/6969699',
-          address: { zip: 6969, city: 'Budapest', street: 'Big street 69.' },
-        });
-        user.save();
-      }
-    });
+  .then(() => {
     console.log('Successfully connected to DB!');
-
     app.listen(6969);
   })
   .catch((err) => console.log(err));
