@@ -1,5 +1,7 @@
 const { validationResult } = require('express-validator');
 
+const Order = require('../models/order');
+const User = require('../models/user');
 const Product = require('../models/product');
 const Category = require('../models/category');
 
@@ -52,6 +54,34 @@ exports.getProductsByCategory = async (req, res, next) => {
   }
 
   return res.status(200).json({ success: true, data: products });
+};
+
+exports.getOrders = async (req, res, next) => {
+  let orders;
+  try {
+    orders = await Order.find({ userId: req.userId });
+  } catch (err) {
+    next(err);
+  }
+  res.status(200).json({ success: true, data: orders });
+};
+
+exports.postOrder = async (req, res, next) => {
+  try {
+    const order = await Order.create({
+      contactInfo: req.body.contactInfo,
+      shippingInfo: req.body.shippingInfo,
+      orderedItems: req.body.orderedItems,
+      date: req.body.date,
+      userId: req.userId,
+    });
+
+    const user = await User.findById(req.userId);
+    await user.addOrderToUser(order._id);
+  } catch (err) {
+    return next(err);
+  }
+  return res.status(200).json({ success: true });
 };
 
 exports.postAddCartProduct = async (req, res, next) => {

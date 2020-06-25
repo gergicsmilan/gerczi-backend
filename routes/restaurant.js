@@ -2,6 +2,7 @@ const express = require('express');
 const { param, body } = require('express-validator');
 
 const restaurantController = require('../controllers/restaurant');
+const isAuth = require('../authentication/is-auth');
 
 const router = express.Router();
 
@@ -25,6 +26,9 @@ router.get(
   restaurantController.getProductsByCategory
 );
 
+//path:"/order/get-orders"
+router.get('/order/get-orders', isAuth, restaurantController.getOrders);
+
 // method:POST
 // path:"/cart/add-product"
 router.post(
@@ -39,5 +43,8 @@ router.post(
   body('productId').exists().isString().isLength({ min: 24, max: 24 }),
   restaurantController.postDeleteCartProduct
 );
+
+// path: "/order/post-order"
+router.post('/order/post-order', isAuth, restaurantController.postOrder);
 
 module.exports = router;
