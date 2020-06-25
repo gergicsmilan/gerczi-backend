@@ -76,7 +76,7 @@ exports.addProductToCategory = async (req, res, next) => {
         $addToSet: { categoryIds: req.body.categoryId },
       }
     );
-    if (categoryUpdate.nModified === 0) {
+    if (categoryUpdate.nModified === 0 || productUpdate.nModified === 0) {
       const error = new Error(
         'Adding product to category failed!\nInvalid category or product is already added!'
       );
