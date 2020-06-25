@@ -15,16 +15,15 @@ const orderSchema = Schema({
     city: { type: String, required: true },
     street: { type: String, required: true },
   },
+
   orderedItems: [
     {
-      productId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true,
-      },
+      productName: { type: String, required: true },
       quantity: { type: Number, required: true },
+      price: { type: Number, required: true },
     },
   ],
+
   date: { type: Date, required: true },
 });
 
